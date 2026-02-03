@@ -116,6 +116,11 @@ def get_bg():
     return send_from_directory('templates', '22.jpeg')
 
 if __name__ == '__main__': 
+    # This part only runs locally
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+else:
+    # This part runs on Vercel
+    with app.app_context():
+        db.create_all()
