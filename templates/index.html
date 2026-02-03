@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Details | Smart Health AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-image">
+
+<div class="form-wrapper">
+
+    <div class="form-header">
+        <h1>🩺 Patient Health Assessment</h1>
+        <p>Enter patient details and symptoms for AI analysis</p>
+    </div>
+
+    <form action="/predict" method="POST" class="glass-form">
+
+        <!-- PATIENT DETAILS -->
+        <div class="section-title">👤 Patient Information</div>
+
+        <div class="grid-2">
+            <input type="text" name="name" placeholder="Patient Name" required>
+
+            <input type="number" name="age" placeholder="Age" min="1" max="120" required>
+        </div>
+        <br>
+        <div class="grid-2">
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+
+            <select name="state" required>
+                <option value="">Select State</option>
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- SYMPTOMS -->
+        <div class="section-title">🤒 Symptoms (Select Carefully)</div>
+
+        <div class="symptom-grid">
+            <select name="s1" required>
+                <option value="">Primary Symptom (Required)</option>
+                {% for s in symptoms %}
+                <option value="{{ s }}">{{ s.replace('_',' ') }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="s2">
+                <option value="">Secondary Symptom</option>
+                {% for s in symptoms %}
+                <option value="{{ s }}">{{ s.replace('_',' ') }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="s3">
+                <option value="">Additional Symptom</option>
+                {% for s in symptoms %}
+                <option value="{{ s }}">{{ s.replace('_',' ') }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="s4">
+                <option value="">Optional Symptom</option>
+                {% for s in symptoms %}
+                <option value="{{ s }}">{{ s.replace('_',' ') }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            🔍 Analyze Patient Health
+        </button>
+
+    </form>
+</div>
+
+</body>
+</html>

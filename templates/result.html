@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Medical Prescription</title>
+    <style>
+        :root { --ink-blue: #1a2a6c; --paper-white: #ffffff; }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+        
+        .prescription-wrapper {
+            background: var(--paper-white);
+            width: 100%;
+            max-width: 750px;
+            margin: 30px auto;
+            padding: 40px;
+            border-top: 10px solid var(--ink-blue);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        .clinic-info { text-align: right; font-size: 0.85em; color: #555; }
+        
+        .patient-info-table { width: 100%; margin-bottom: 20px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
+        .patient-info-table td { padding: 5px 0; }
+
+        .rx-symbol { font-size: 45px; font-weight: bold; color: var(--ink-blue); margin: 10px 0; font-family: serif; }
+
+        .symptom-box { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 3px solid #ccc; }
+        .diagnosis-label { font-weight: bold; color: #333; text-transform: uppercase; font-size: 0.8em; letter-spacing: 1px; }
+        
+        .medication-list { list-style: none; padding-left: 10px; line-height: 2; }
+        .medication-list li::before { content: "• "; color: var(--ink-blue); font-weight: bold; }
+
+        .hospital-recommendation {
+            margin-top: 30px;
+            background: #e9f5ee;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .footer-signature {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Aligns everything to the right */
+}
+
+.signature-content {
+    text-align: right;
+    width: 250px; /* Controls how wide the signature area is */
+}
+
+.sig-line {
+    border-top: 2px solid #333;
+    margin-top: 5px;
+    width: 100%; /* Spans the width of the signature-content box */
+}
+
+.sig-caption {
+    font-size: 0.8em;
+    color: #555;
+    margin-top: 5px;
+    font-weight: bold;
+}
+        .no-print { margin-top: 20px; text-align: center; }
+        
+        @media print { .no-print { display: none; } .prescription-wrapper { box-shadow: none; margin: 0; width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div class="prescription-wrapper">
+        <div class="header">
+            <div style="float: left;">
+                <h1 style="margin: 0; color: var(--ink-blue);">AI HEALTH ASSIST</h1>
+                <p style="margin: 0; font-size: 0.8em;">Virtual Diagnostic Laboratory</p>
+            </div>
+            <div class="clinic-info">
+                <strong>Date:</strong> {{ date }}<br>
+                <strong>Ref ID:</strong> #{{ report_id }}
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+
+        <table class="patient-info-table">
+            <tr>
+                <td><strong>Patient Name:</strong> {{ name }}</td>
+                <td style="text-align: right;"><strong>Age/Sex:</strong> {{ age }} / {{ gender }}</td>
+            </tr>
+            <tr>
+                <td><strong>Location:</strong> {{ state }}</td>
+                <td style="text-align: right;"><strong>Status:</strong> Preliminary Electronic Report</td>
+            </tr>
+        </table>
+
+        <div class="symptom-box">
+            <span class="diagnosis-label">Chief Complaints / Symptoms:</span>
+            <p style="margin: 5px 0 0 0; color: #444; font-style: italic;">{{ symptoms }}</p>
+        </div>
+
+        <div class="rx-symbol">℞</div>
+
+        <div class="diagnosis-section">
+            <p class="diagnosis-label">Preliminary Diagnosis:</p>
+            <h2 style="margin: 5px 0 20px 0; color: #d90429; letter-spacing: 1px;">{{ disease }}</h2>
+        </div>
+
+        <div class="advice-section">
+            <p class="diagnosis-label">Suggested Advice & Precautions:</p>
+            <ul class="medication-list">
+                {% for p in precautions %}
+                <li>{{ p }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="hospital-recommendation">
+            <p style="margin-top: 0; font-weight: bold; color: #2d6a4f;">🏥 RECOMMENDED HOSPITALS IN {{ state|upper }}:</p>
+            <ul style="list-style: none; padding: 0; font-size: 0.9em; line-height: 1.6;">
+                {% for h in hospitals %}
+                <li>📍 {{ h }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+       <div class="footer-signature">
+    <div class="signature-content">
+        <p style="margin-bottom: 40px; font-style: italic;">Digitally Verified By</p>
+        <div class="sig-line"></div>
+        <div class="sig-caption">HEALTH-AI DIAGNOSTIC SYSTEM</div>
+    </div>
+</div>
+<div style="clear: both;"></div>
+
+    <div class="no-print">
+        <button onclick="window.print()" style="padding: 12px 25px; background: #1a2a6c; color: white; border: none; border-radius: 5px; cursor: pointer;">Download / Print Prescription</button>
+        <br><br>
+        <a href="/" style="text-decoration: none; color: #666;">← Perform Another Test</a>
+    </div>
+
+</body>
+</html>
