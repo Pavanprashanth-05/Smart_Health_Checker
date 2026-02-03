@@ -80,17 +80,28 @@ def predict():
     age = request.form.get('age') 
     gender = request.form.get('gender') 
     state = request.form.get('state') 
+    
+    # Get symptoms from form
     user_symptoms = [request.form.get(f's{i}') for i in range(1, 5)] 
     active = [s.replace('_', ' ') for s in user_symptoms if s and s != ""] 
     symptoms_string = ", ".join(active) 
 
-    if not active: return "<h3>Please select symptoms!</h3>" 
+    if not active:  
+        return "<h3>Please select symptoms!</h3>" 
 
-    input_df = pd.DataFrame(np.zeros((1, len(symptoms_list))), columns=symptoms_list) 
-    for s in user_symptoms: 
-        if s in symptoms_list: input_df.loc[0, s] = 1 
+    # --- REPLACE PANDAS LOGIC WITH THIS ---
+    # Create a 2D array of zeros with shape (1, number_of_symptoms)
+    input_data = np.zeros(len(symptoms_list)).reshape(1, -1) 
+    
+    # Fill the array: if the symptom is in our list, set that index to 1
+    for i, s in enumerate(symptoms_list): 
+        if s in user_symptoms:  
+            input_data[0][i] = 1 
      
-    prediction = model.predict(input_df)[0] 
+    # Make prediction using the Numpy array instead of a DataFrame
+    prediction = model.predict(input_data)[0] 
+    # ---------------------------------------
+
     specialist_needed = disease_data.get(prediction, {}).get('specialist', 'General Physician') 
     state_data = hospitals.get(state, {}) 
     recommended_hospitals = state_data.get(specialist_needed, ["General Medical Center"]) 
@@ -98,10 +109,11 @@ def predict():
     current_date = datetime.now().strftime("%d %b %Y") 
     report_id = random.randint(10000, 99999) 
 
-    return render_template('result.html', name=name, age=age, gender=gender, disease=prediction, 
-                           precautions=precautions.get(prediction, ["Consult a professional"]), 
-                           hospitals=recommended_hospitals, state=state, symptoms=symptoms_string, 
-                           date=current_date, report_id=report_id) 
+    return render_template('result.html',   
+                            name=name, age=age, gender=gender, disease=prediction,  
+                            precautions=precautions.get(prediction, ["Consult a professional"]), 
+                            hospitals=recommended_hospitals, state=state, symptoms=symptoms_string, 
+                            date=current_date, report_id=report_id)
 
 @app.route('/logout')
 def logout():
